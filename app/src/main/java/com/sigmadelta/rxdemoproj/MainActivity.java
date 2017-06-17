@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fabSearchUser = (FloatingActionButton) findViewById(R.id.fabSearchUser);
         fabSearchUser.setOnClickListener( view -> {
             Log.d(TAG, "Searching for user \"" + editUserName.getText() + "\"...");
+            Toast.makeText(this, "Searching for user " + editUserName.getText() + "...", Toast.LENGTH_SHORT).show();
             // Send API request to see whether user exists
         });
     }

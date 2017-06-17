@@ -24,9 +24,9 @@
 
     <include
         layout="@layout/content_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_width="416dp"
-        android:layout_height="603dp"
         tools:layout_editor_absoluteX="-5dp"
         tools:layout_editor_absoluteY="-16dp"/>
 
