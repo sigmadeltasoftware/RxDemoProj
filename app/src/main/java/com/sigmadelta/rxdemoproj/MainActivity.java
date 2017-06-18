@@ -5,6 +5,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -24,6 +26,22 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         EditText editUserName = (EditText) findViewById(R.id.editUserName);
+        editUserName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Add interactor/usecase here to search for user whether he exists
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         FloatingActionButton fabSearchUser = (FloatingActionButton) findViewById(R.id.fabSearchUser);
         fabSearchUser.setOnClickListener( view -> {
