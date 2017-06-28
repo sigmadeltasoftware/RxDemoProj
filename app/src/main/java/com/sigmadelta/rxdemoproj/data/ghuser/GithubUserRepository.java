@@ -89,7 +89,7 @@ public class GithubUserRepository implements IGithubUserRepository {
         return  "{\"" + GithubUserApi.USERNAME.getApiName() + "\":\"" + MainApplication.getContext().getResources().getString(R.string.invalid_username) +"\"," +
                  "\"" + GithubUserApi.FOLLOWERS.getApiName() + "\":-1," +
                  "\"" + GithubUserApi.FOLLOWING.getApiName() + "\":-1," +
-                 "\\" + GithubUserApi.REPOSITORIES.getApiName() + "\":-1," +
+                 "\"" + GithubUserApi.REPOSITORIES.getApiName() + "\":-1," +
                  "\"" + GithubUserApi.AVATAR.getApiName() + "\":\"NOT_AVAILABLE\"}";
     }
 }
