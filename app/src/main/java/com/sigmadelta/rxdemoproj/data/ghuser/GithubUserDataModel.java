@@ -19,11 +19,6 @@ public class GithubUserDataModel implements IGithubUserDataModel {
     @NonNull
     @Override
     public Observable<GithubUser> getUserData(String userName) {
-        return null;
-    }
-
-    @Override
-    public Observable<Boolean> checkUserExist(String userName) {
-        return _ghUserRepository.doesGithubUserExist(userName);
+        return _ghUserRepository.getGithubUser(userName);
     }
 }

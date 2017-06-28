@@ -9,11 +9,15 @@ import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.jakewharton.rxbinding2.view.RxView;
+import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.sigmadelta.core.util.PermissionManager;
 import com.sigmadelta.rxdemoproj.R;
 import com.sigmadelta.rxdemoproj.presentation.ghuser.GithubUserViewModel;
 import com.sigmadelta.rxdemoproj.presentation.ghuser.GithubUserViewProxy;
 import com.sigmadelta.rxdemoproj.presentation.ghuser.IGithubUserViewProxy;
+
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -43,21 +47,16 @@ public class MainActivity extends AppCompatActivity {
         _ghUserViewProxy = new GithubUserViewProxy(this);
 
         EditText editUserName = (EditText) findViewById(R.id.editUserName);
-        editUserName.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            @Override public void afterTextChanged(Editable editable) {}
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                _ghUserViewModel.doesUserExist(charSequence.toString())
-                        .subscribeOn(Schedulers.io())
-                        .doOnError(throwable -> {
-                            // TODO: Improve this
-                            throw new Exception(throwable);
-                        })
-                        .subscribe();
-            }
-        });
+        _compositeDisposable.add(RxTextView.textChanges(editUserName)
+                .subscribeOn(Schedulers.io())
+                .debounce(500, TimeUnit.MILLISECONDS)
+                .map(CharSequence::toString)
+                .subscribe(string -> {
+                    _ghUserViewModel.doesUserExist(string)
+                            .subscribeOn(Schedulers.io())
+                            .subscribe();
+                })
+        );
     }
 
     @Override
@@ -72,14 +71,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        _compositeDisposable.dispose();
     }
 
     private Disposable subscribeToUsernameChanges() {
-        return _ghUserViewModel.bindCheckUserExistance()
+        return _ghUserViewModel.bindGetUserData()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(_ghUserViewProxy::showUsernameExists,
-                           _ghUserViewProxy::onUsernameChangeError);
+                .subscribe(ghUser -> {
+                    _ghUserViewProxy.showUsernameData(ghUser);
+                    _ghUserViewProxy.showUsernameExists(ghUser.getName().equals(
+                            getResources().getString(R.string.invalid_username)) ?
+                            Boolean.FALSE :
+                            Boolean.TRUE
+                    );
+                }, _ghUserViewProxy::onUsernameChangeError);
     }
 
     @Override
