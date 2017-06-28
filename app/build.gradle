@@ -46,4 +46,7 @@ dependencies {
 
     // JsonPath
     compile 'com.jayway.jsonpath:json-path:0.9.1'
+
+    // Picasso
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }

@@ -54,7 +54,7 @@ public class GithubUserRepository implements IGithubUserRepository {
                     },
                     error -> {
                         // If user doesn't exist
-                        Timber.e("Stringrequest statuscode= " + error.networkResponse.statusCode);
+                        Timber.e("Stringrequest statuscode = " + error.networkResponse.statusCode);
                         if (error.networkResponse.statusCode == 404) {
                             e.onNext(getGithubUserFromJson(getInvalidUserJson()));
                         } else {
@@ -73,12 +73,13 @@ public class GithubUserRepository implements IGithubUserRepository {
     private GithubUser getGithubUserFromJson(String jsonRequest) {
         final GithubUser user = new GithubUser();
 
-        // TODO: Make this more robust
+        // TODO: Make this more robust => Create GithubAPI enum class or something
         Timber.d("Debugging JsonRequest: " + jsonRequest);
         user.setName(JsonPath.read(jsonRequest, "$.login"));
         user.setFollowerCount(JsonPath.read(jsonRequest, "$.followers"));
         user.setFollowingCount(JsonPath.read(jsonRequest, "$.following"));
         user.setRepositoryCount(JsonPath.read(jsonRequest, "$.public_repos"));
+        user.setAvatar(JsonPath.read(jsonRequest, "$.avatar_url"));
 
         return user;
     }
@@ -87,6 +88,7 @@ public class GithubUserRepository implements IGithubUserRepository {
         return  "{\"login\":\"" + MainApplication.getContext().getResources().getString(R.string.invalid_username) +"\"," +
                  "\"followers\":-1," +
                  "\"following\":-1," +
-                 "\"public_repos\":-1}";
+                 "\"public_repos\":-1," +
+                 "\"avatar_url\":\"NOT_AVAILABLE\"}";
     }
 }
