@@ -39,7 +39,7 @@ public class GithubUserViewProxy implements IGithubUserViewProxy {
 
         // TODO: Look into better icon
         if (!userExists) {
-            _imgUser.setImageDrawable(_act.getResources().getDrawable(R.mipmap.ic_launcher));
+            _imgUser.setImageDrawable(_act.getResources().getDrawable(R.drawable.user_not_found));
         }
     }
 

@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         EditText editUserName = (EditText) findViewById(R.id.editUserName);
         _compositeDisposable.add(RxTextView.textChanges(editUserName)
+                .filter(charSequence -> charSequence.length() > 0)
                 .subscribeOn(Schedulers.io())
                 .debounce(500, TimeUnit.MILLISECONDS)
                 .map(CharSequence::toString)
