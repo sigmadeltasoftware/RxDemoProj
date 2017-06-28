@@ -2,6 +2,7 @@ package com.sigmadelta.rxdemoproj.presentation.ghuser;
 
 
 import com.sigmadelta.rxdemoproj.data.ghuser.GithubUserDataModel;
+import com.sigmadelta.rxdemoproj.domain.ghuser.GithubUser;
 import com.sigmadelta.rxdemoproj.domain.ghuser.IGithubUserDataModel;
 
 import io.reactivex.Completable;
@@ -25,8 +26,8 @@ public class GithubUserViewModel {
         _ghUserDataModel = new GithubUserDataModel();
     }
 
-    public Observable<Boolean> bindCheckUserExistance() {
-        return _ghUserSubject.flatMap(_ghUserDataModel::checkUserExist);
+    public Observable<GithubUser> bindGetUserData() {
+        return _ghUserSubject.flatMap(_ghUserDataModel::getUserData);
     }
 
     public Completable doesUserExist(String userName) {

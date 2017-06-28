@@ -3,9 +3,9 @@ package com.sigmadelta.rxdemoproj.domain.ghuser;
 
 public class GithubUser {
     private String _name;
-    private int _repositories;
-    private int _followers;
-    private int _following;
+    private int _repositoryCount;
+    private int _followerCount;
+    private int _followingCount;
 
     public String getName() {
         return _name;
@@ -15,27 +15,27 @@ public class GithubUser {
         this._name = _name;
     }
 
-    public int getRepositories() {
-        return _repositories;
+    public int getRepositoryCount() {
+        return _repositoryCount;
     }
 
-    public void setRepositories(int _repositories) {
-        this._repositories = _repositories;
+    public void setRepositoryCount(int repositoryCount) {
+        this._repositoryCount = repositoryCount;
     }
 
-    public int getFollowers() {
-        return _followers;
+    public int getFollowerCount() {
+        return _followerCount;
     }
 
-    public void setFollowers(int _followers) {
-        this._followers = _followers;
+    public void setFollowerCount(int followerCount) {
+        this._followerCount = followerCount;
     }
 
-    public int getFollowing() {
-        return _following;
+    public int getFollowingCount() {
+        return _followingCount;
     }
 
-    public void setFollowing(int _following) {
-        this._following = _following;
+    public void setFollowingCount(int followingCount) {
+        this._followingCount = followingCount;
     }
 }

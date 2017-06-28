@@ -36,10 +36,14 @@ dependencies {
     // RxJava
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.1.0'
+    compile 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
 
     // Timber
     compile 'com.jakewharton.timber:timber:4.5.1'
 
     // Volley
     compile 'com.android.volley:volley:1.0.0'
+
+    // JsonPath
+    compile 'com.jayway.jsonpath:json-path:0.9.1'
 }
