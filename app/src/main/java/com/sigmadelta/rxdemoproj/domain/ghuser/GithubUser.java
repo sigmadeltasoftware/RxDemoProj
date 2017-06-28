@@ -3,6 +3,7 @@ package com.sigmadelta.rxdemoproj.domain.ghuser;
 
 public class GithubUser {
     private String _name;
+    private String _avatar;
     private int _repositoryCount;
     private int _followerCount;
     private int _followingCount;
@@ -11,8 +12,16 @@ public class GithubUser {
         return _name;
     }
 
-    public void setName(String _name) {
-        this._name = _name;
+    public void setName(String name) {
+        this._name = name;
+    }
+
+    public String getAvatar() {
+        return _avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this._avatar = avatar;
     }
 
     public int getRepositoryCount() {
