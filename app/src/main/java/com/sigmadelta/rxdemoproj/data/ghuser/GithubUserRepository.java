@@ -9,6 +9,7 @@ import com.jayway.jsonpath.JsonPath;
 import com.sigmadelta.rxdemoproj.MainApplication;
 import com.sigmadelta.rxdemoproj.R;
 import com.sigmadelta.rxdemoproj.domain.ghuser.GithubUser;
+import com.sigmadelta.rxdemoproj.domain.ghuser.GithubUserApi;
 import com.sigmadelta.rxdemoproj.domain.ghuser.IGithubUserRepository;
 
 import io.reactivex.Observable;
@@ -75,20 +76,20 @@ public class GithubUserRepository implements IGithubUserRepository {
 
         // TODO: Make this more robust => Create GithubAPI enum class or something
         Timber.d("Debugging JsonRequest: " + jsonRequest);
-        user.setName(JsonPath.read(jsonRequest, "$.login"));
-        user.setFollowerCount(JsonPath.read(jsonRequest, "$.followers"));
-        user.setFollowingCount(JsonPath.read(jsonRequest, "$.following"));
-        user.setRepositoryCount(JsonPath.read(jsonRequest, "$.public_repos"));
-        user.setAvatar(JsonPath.read(jsonRequest, "$.avatar_url"));
+        user.setName(JsonPath.read(jsonRequest, "$." + GithubUserApi.USERNAME.getApiName()));
+        user.setFollowerCount(JsonPath.read(jsonRequest, "$." + GithubUserApi.FOLLOWERS.getApiName()));
+        user.setFollowingCount(JsonPath.read(jsonRequest, "$." + GithubUserApi.FOLLOWING.getApiName()));
+        user.setRepositoryCount(JsonPath.read(jsonRequest, "$." + GithubUserApi.REPOSITORIES.getApiName()));
+        user.setAvatar(JsonPath.read(jsonRequest, "$." + GithubUserApi.AVATAR.getApiName()));
 
         return user;
     }
 
     private String getInvalidUserJson() {
-        return  "{\"login\":\"" + MainApplication.getContext().getResources().getString(R.string.invalid_username) +"\"," +
-                 "\"followers\":-1," +
-                 "\"following\":-1," +
-                 "\"public_repos\":-1," +
-                 "\"avatar_url\":\"NOT_AVAILABLE\"}";
+        return  "{\"" + GithubUserApi.USERNAME.getApiName() + "\":\"" + MainApplication.getContext().getResources().getString(R.string.invalid_username) +"\"," +
+                 "\"" + GithubUserApi.FOLLOWERS.getApiName() + "\":-1," +
+                 "\"" + GithubUserApi.FOLLOWING.getApiName() + "\":-1," +
+                 "\\" + GithubUserApi.REPOSITORIES.getApiName() + "\":-1," +
+                 "\"" + GithubUserApi.AVATAR.getApiName() + "\":\"NOT_AVAILABLE\"}";
     }
 }

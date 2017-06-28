@@ -4,12 +4,9 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.sigmadelta.core.util.PermissionManager;
 import com.sigmadelta.rxdemoproj.R;
