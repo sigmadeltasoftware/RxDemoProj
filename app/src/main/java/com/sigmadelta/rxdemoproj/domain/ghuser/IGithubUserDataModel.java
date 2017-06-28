@@ -6,5 +6,8 @@ import io.reactivex.annotations.NonNull;
 
 public interface IGithubUserDataModel {
     @NonNull
-    Observable<GithubUser> getUserData();
+    Observable<GithubUser> getUserData(String userName);
+
+    @NonNull
+    Observable<Boolean> checkUserExist(String userName);
 }
