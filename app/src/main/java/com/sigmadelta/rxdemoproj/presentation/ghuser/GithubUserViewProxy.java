@@ -52,13 +52,6 @@ public class GithubUserViewProxy implements IGithubUserViewProxy {
     }
 
     @Override
-    public void showUsernameData(GithubUser ghUser) {
-        _txtRepos.setText(String.valueOf(ghUser.getRepositoryCount()));
-        _txtFollowers.setText(String.valueOf(ghUser.getFollowerCount()));
-        _txtFollowing.setText(String.valueOf(ghUser.getFollowingCount()));
-    }
-
-    @Override
     public void onUsernameChangeError(Throwable throwable) {
         showUsernameExists(false);
         Toast.makeText(_act,
