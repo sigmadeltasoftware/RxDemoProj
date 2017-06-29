@@ -45,7 +45,7 @@ public class GithubUserRepository implements IGithubUserRepository {
         return Observable.create(e -> {
             // Instantiate the RequestQueue.
             RequestQueue queue = Volley.newRequestQueue(MainApplication.getContext());
-            String url ="https://api.github.com/users/";
+            final String url ="https://api.github.com/users/";
 
             // Request a string response from the provided URL.
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url + githubUserName,
@@ -80,7 +80,7 @@ public class GithubUserRepository implements IGithubUserRepository {
     private GithubUser getGithubUserFromJson(String jsonRequest) {
         final GithubUser user = new GithubUser();
 
-        // TODO: Make this more robust => Create GithubAPI enum class or something
+        // TODO: Make this more robust
         Timber.d("Debugging JsonRequest: " + jsonRequest);
         user.setName(JsonPath.read(jsonRequest, "$." + GithubUserApi.USERNAME.getApiName()));
         user.setFollowerCount(JsonPath.read(jsonRequest, "$." + GithubUserApi.FOLLOWERS.getApiName()));
