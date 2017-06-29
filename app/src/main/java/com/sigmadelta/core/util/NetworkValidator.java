@@ -1,4 +1,4 @@
-package com.sigmadelta.rxdemoproj.presentation;
+package com.sigmadelta.core.util;
 
 
 import java.net.InetAddress;

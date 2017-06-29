@@ -8,18 +8,16 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.jakewharton.rxbinding2.widget.RxTextView;
+import com.sigmadelta.core.util.NetworkValidator;
 import com.sigmadelta.core.util.PermissionManager;
 import com.sigmadelta.rxdemoproj.R;
 import com.sigmadelta.rxdemoproj.presentation.ghuser.GithubUserViewModel;
 import com.sigmadelta.rxdemoproj.presentation.ghuser.GithubUserViewProxy;
 import com.sigmadelta.rxdemoproj.presentation.ghuser.IGithubUserViewProxy;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
