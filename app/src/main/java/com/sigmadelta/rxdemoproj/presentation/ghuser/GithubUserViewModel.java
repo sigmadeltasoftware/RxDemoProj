@@ -10,16 +10,9 @@ import io.reactivex.CompletableObserver;
 import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;
 
-/**
- * Creator: Bojan Belic
- * Date:    6/23/17
- * Company: Sigma Delta Software Solutions
- */
-
 public class GithubUserViewModel {
 
     private IGithubUserDataModel _ghUserDataModel;
-
     private BehaviorSubject<String> _ghUserSubject = BehaviorSubject.create();
 
     public GithubUserViewModel() {
