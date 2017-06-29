@@ -14,8 +14,12 @@ import com.sigmadelta.rxdemoproj.presentation.ghuser.GithubUserViewModel;
 import com.sigmadelta.rxdemoproj.presentation.ghuser.GithubUserViewProxy;
 import com.sigmadelta.rxdemoproj.presentation.ghuser.IGithubUserViewProxy;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -32,8 +36,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
+        // Before continuing, validate if network data connection is valid
+        Observable.defer(NetworkValidator::isDataConnectionValid)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aBoolean -> {
+                    if (!aBoolean) {
+                        setContentView(R.layout.no_network);
+                    }
+                });
+
+        setContentView(R.layout.activity_main);
         PermissionManager permMan = new PermissionManager(this);
         permMan.maybeRequestPermission(null, PermissionManager.Permissions.INTERNET);
 
@@ -62,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         // TODO: Move to binding
-        // TODO: Make sure to unsubscribe as well!
         _compositeDisposable.add(subscribeToUsernameChanges());
     }
 

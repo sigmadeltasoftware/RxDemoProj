@@ -54,6 +54,12 @@ public class GithubUserRepository implements IGithubUserRepository {
                         e.onComplete();
                     },
                     error -> {
+
+                        if (error == null || error.networkResponse == null) {
+                            Timber.e("getGithubUserFromRequest(): Error returned is null or has no network response. Check internet connection?");
+                            return;
+                        }
+
                         // If user doesn't exist
                         Timber.e("Stringrequest statuscode = " + error.networkResponse.statusCode);
                         if (error.networkResponse.statusCode == 404) {
