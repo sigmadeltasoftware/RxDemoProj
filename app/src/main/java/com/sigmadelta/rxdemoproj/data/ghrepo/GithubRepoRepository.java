@@ -1,25 +1,25 @@
-package com.sigmadelta.rxdemoproj.data.ghproject;
+package com.sigmadelta.rxdemoproj.data.ghrepo;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.sigmadelta.rxdemoproj.MainApplication;
-import com.sigmadelta.rxdemoproj.domain.ghproject.GithubProject;
-import com.sigmadelta.rxdemoproj.domain.ghproject.IGithubProjectRepository;
+import com.sigmadelta.rxdemoproj.domain.ghrepo.GithubRepo;
+import com.sigmadelta.rxdemoproj.domain.ghrepo.IGithubRepoRepository;
 
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 
 
-public class GithubProjectRepository implements IGithubProjectRepository {
+public class GithubRepoRepository implements IGithubRepoRepository {
 
     @NonNull
-    public Observable<GithubProject> getGithubProject(String userName) {
+    public Observable<GithubRepo> getGithubRepo(String userName) {
         //TODO: Look into caching option
-        return getGithubProjectsFromRequest(userName);
+        return getGithubReposFromRequest(userName);
     }
 
     @NonNull
-    private Observable<GithubProject> getGithubProjectsFromRequest(String userName) {
+    private Observable<GithubRepo> getGithubReposFromRequest(String userName) {
         return Observable.create(e -> {
             // Instantiate the RequestQueue.
             RequestQueue queue = Volley.newRequestQueue(MainApplication.getContext());

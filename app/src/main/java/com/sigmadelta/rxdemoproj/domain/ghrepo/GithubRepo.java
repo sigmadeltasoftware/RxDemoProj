@@ -1,7 +1,7 @@
-package com.sigmadelta.rxdemoproj.domain.ghproject;
+package com.sigmadelta.rxdemoproj.domain.ghrepo;
 
 
-public class GithubProject {
+public class GithubRepo {
     private String _name;
     private int _stars;
     private String _owner;
