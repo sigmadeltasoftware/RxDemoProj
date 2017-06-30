@@ -2,15 +2,22 @@ package com.sigmadelta.rxdemoproj.presentation;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.sigmadelta.core.util.NetworkValidator;
 import com.sigmadelta.core.util.PermissionManager;
 import com.sigmadelta.rxdemoproj.R;
+import com.sigmadelta.rxdemoproj.presentation.ghrepo.GithubRepoViewModel;
+import com.sigmadelta.rxdemoproj.presentation.ghrepo.GithubRepoViewProxy;
+import com.sigmadelta.rxdemoproj.presentation.ghrepo.IGithubRepoViewProxy;
 import com.sigmadelta.rxdemoproj.presentation.ghuser.GithubUserViewModel;
 import com.sigmadelta.rxdemoproj.presentation.ghuser.GithubUserViewProxy;
 import com.sigmadelta.rxdemoproj.presentation.ghuser.IGithubUserViewProxy;
@@ -29,7 +36,9 @@ public class MainActivity extends AppCompatActivity {
 
     private final CompositeDisposable _compositeDisposable = new CompositeDisposable();
     private GithubUserViewModel _ghUserViewModel;
+    private GithubRepoViewModel _ghRepoViewModel;
     private IGithubUserViewProxy _ghUserViewProxy;
+    private IGithubRepoViewProxy _ghRepoViewProxy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +62,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         _ghUserViewModel = new GithubUserViewModel();
+        _ghRepoViewModel = new GithubRepoViewModel();
         _ghUserViewProxy = new GithubUserViewProxy(this);
+        _ghRepoViewProxy = new GithubRepoViewProxy(this);
 
         EditText editUserName = (EditText) findViewById(R.id.editUserName);
         _compositeDisposable.add(RxTextView.textChanges(editUserName)
@@ -67,6 +78,16 @@ public class MainActivity extends AppCompatActivity {
                             .subscribe();
                 })
         );
+
+        FloatingActionButton fabSearch = (FloatingActionButton) findViewById(R.id.fabSearchUser);
+        _compositeDisposable.add(RxView.clicks(fabSearch)
+                .subscribe( view -> {
+                    Timber.e("fabSearch clicked!");
+                    _ghRepoViewModel.getRepoList(editUserName.getText().toString())
+                            .subscribeOn(Schedulers.io())
+                            .subscribe();
+                })
+        );
     }
 
     @Override
@@ -75,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO: Move to binding
         _compositeDisposable.add(subscribeToUsernameChanges());
+        _compositeDisposable.add(subscribeToProjectSearch());
     }
 
     @Override
@@ -94,7 +116,20 @@ public class MainActivity extends AppCompatActivity {
                             Boolean.FALSE :
                             Boolean.TRUE
                     );
+                    _ghRepoViewProxy.setRepositoryDataVisibility(View.INVISIBLE);
                 }, _ghUserViewProxy::onUsernameChangeError);
+    }
+
+    private Disposable subscribeToProjectSearch() {
+        return _ghRepoViewModel.bindGetRepoList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(ghRepo -> {
+                    Timber.e("subscribeToProjectSearch() || itemcount: " + ghRepo.getItemCount());
+                    _ghRepoViewProxy.showRepositoryData(ghRepo);
+                }, error -> {
+                    Timber.e("Error occurred: " + error);
+                });
     }
 
     @Override

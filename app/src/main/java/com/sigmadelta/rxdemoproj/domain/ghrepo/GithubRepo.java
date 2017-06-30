@@ -5,7 +5,7 @@ public class GithubRepo {
     private String _name;
     private int _stars;
     private String _owner;
-    private String _fork;
+    private boolean _fork;
     private int _issues;
 
     public String getName() {
@@ -32,11 +32,11 @@ public class GithubRepo {
         this._owner = _owner;
     }
 
-    public String getFork() {
+    public boolean getFork() {
         return _fork;
     }
 
-    public void setFork(String _fork) {
+    public void setFork(boolean _fork) {
         this._fork = _fork;
     }
 

@@ -2,10 +2,8 @@ package com.sigmadelta.rxdemoproj.presentation.ghrepo;
 
 
 import com.sigmadelta.rxdemoproj.data.ghrepo.GithubRepoDataModel;
-import com.sigmadelta.rxdemoproj.domain.ghrepo.GithubRepo;
 import com.sigmadelta.rxdemoproj.domain.ghrepo.IGithubRepoDataModel;
-
-import java.util.List;
+import com.sigmadelta.rxdemoproj.presentation.ghrepo.adapter.GithubRepoAdapter;
 
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
@@ -23,8 +21,9 @@ public class GithubRepoViewModel {
     }
 
     @NonNull
-    public Observable<List<GithubRepo>> bindGetRepoList() {
-        return _ghRepoSubject.flatMap(_ghRepoDataModel::getRepoList);
+    public Observable<GithubRepoAdapter> bindGetRepoList() {
+        return _ghRepoSubject.flatMap(_ghRepoDataModel::getRepoList)
+                .map(GithubRepoAdapter::new);
     }
 
     @NonNull
