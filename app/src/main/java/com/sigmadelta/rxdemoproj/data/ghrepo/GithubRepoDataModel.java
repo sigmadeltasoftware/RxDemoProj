@@ -25,7 +25,7 @@ public class GithubRepoDataModel implements IGithubRepoDataModel {
         return Observable.create(e -> {
             // Instantiate the RequestQueue.
             RequestQueue queue = Volley.newRequestQueue(MainApplication.getContext());
-            final String url ="https://api.github.com/users/" + userName + "/repos";
+            final String url ="https://api.github.com/search/repositories?q=user:" + userName + "&sort=stars&order=desc";
             Timber.e("getGithubReposFromRequest()");
 
             // Request a string response from the provided URL.
@@ -56,14 +56,18 @@ public class GithubRepoDataModel implements IGithubRepoDataModel {
         // TODO: Make more robust
         for (int i = 0; i < 3; ++i) {
             GithubRepo repo = new GithubRepo();
-            repo.setName(JsonPath.read(jsonRequest, "$.[" + i + "]." + GithubRepoApi.NAME.getApiName()));
-            repo.setStars(JsonPath.read(jsonRequest, "$.[" + i + "]." + GithubRepoApi.STARS.getApiName()));
-            repo.setOwner(JsonPath.read(jsonRequest, "$.[" + i + "]." + GithubRepoApi.OWNER.getApiName()));
-            repo.setFork(JsonPath.read(jsonRequest, "$.[" + i + "]." + GithubRepoApi.FORKED.getApiName()));
-            repo.setIssues(JsonPath.read(jsonRequest, "$.[" + i + "]." + GithubRepoApi.ISSUE_COUNT.getApiName()));
+            repo.setName(JsonPath.read(jsonRequest, getJsonPathFilter(i, GithubRepoApi.NAME.getApiName())));
+            repo.setStars(JsonPath.read(jsonRequest, getJsonPathFilter(i, GithubRepoApi.STARS.getApiName())));
+            repo.setOwner(JsonPath.read(jsonRequest, getJsonPathFilter(i, GithubRepoApi.OWNER.getApiName())));
+            repo.setFork(JsonPath.read(jsonRequest, getJsonPathFilter(i, GithubRepoApi.FORKED.getApiName())));
+            repo.setIssues(JsonPath.read(jsonRequest, getJsonPathFilter(i, GithubRepoApi.ISSUE_COUNT.getApiName())));
             repoList.add(repo);
         }
         Timber.e("Finished repo list: " + repoList);
         return repoList;
+    }
+
+    private String getJsonPathFilter(int position, String apiName) {
+        return "$.items.[" + position + "]." + apiName;
     }
 }

@@ -33,7 +33,6 @@ public class GithubUserViewProxy implements IGithubUserViewProxy {
 
     @Override
     public void showUsernameExists(boolean userExists) {
-        Timber.d("Does user exist: " + userExists);
         _fabSearch.setAlpha(userExists ? 1.0f : 0.3f);
         _fabSearch.setEnabled(userExists);
 

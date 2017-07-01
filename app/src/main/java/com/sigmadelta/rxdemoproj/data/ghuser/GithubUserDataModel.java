@@ -81,7 +81,6 @@ public class GithubUserDataModel implements IGithubUserDataModel {
         final GithubUser user = new GithubUser();
 
         // TODO: Make this more robust
-        Timber.d("Debugging JsonRequest: " + jsonRequest);
         user.setName(JsonPath.read(jsonRequest, "$." + GithubUserApi.USERNAME.getApiName()));
         user.setFollowerCount(JsonPath.read(jsonRequest, "$." + GithubUserApi.FOLLOWERS.getApiName()));
         user.setFollowingCount(JsonPath.read(jsonRequest, "$." + GithubUserApi.FOLLOWING.getApiName()));
