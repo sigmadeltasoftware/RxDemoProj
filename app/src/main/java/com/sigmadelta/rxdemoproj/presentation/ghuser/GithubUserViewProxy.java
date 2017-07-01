@@ -11,8 +11,6 @@ import com.sigmadelta.rxdemoproj.R;
 import com.sigmadelta.rxdemoproj.domain.ghuser.GithubUser;
 import com.squareup.picasso.Picasso;
 
-import timber.log.Timber;
-
 public class GithubUserViewProxy implements IGithubUserViewProxy {
 
     private Activity _act;
@@ -36,7 +34,6 @@ public class GithubUserViewProxy implements IGithubUserViewProxy {
         _fabSearch.setAlpha(userExists ? 1.0f : 0.3f);
         _fabSearch.setEnabled(userExists);
 
-        // TODO: Look into better icon
         if (!userExists) {
             _imgUser.setImageDrawable(_act.getResources().getDrawable(R.drawable.user_not_found));
         }

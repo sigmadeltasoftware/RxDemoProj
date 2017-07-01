@@ -3,7 +3,6 @@ package com.sigmadelta.rxdemoproj.presentation;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -82,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fabSearch = (FloatingActionButton) findViewById(R.id.fabSearchUser);
         _compositeDisposable.add(RxView.clicks(fabSearch)
                 .subscribe( view -> {
-                    Timber.e("fabSearch clicked!");
                     _ghRepoViewModel.getRepoList(editUserName.getText().toString())
                             .subscribeOn(Schedulers.io())
                             .subscribe();

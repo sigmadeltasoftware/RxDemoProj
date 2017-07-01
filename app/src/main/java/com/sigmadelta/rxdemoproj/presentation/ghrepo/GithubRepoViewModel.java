@@ -9,6 +9,7 @@ import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
 public class GithubRepoViewModel {
@@ -23,6 +24,7 @@ public class GithubRepoViewModel {
     @NonNull
     public Observable<GithubRepoAdapter> bindGetRepoList() {
         return _ghRepoSubject.flatMap(_ghRepoDataModel::getRepoList)
+                .subscribeOn(Schedulers.io())
                 .map(GithubRepoAdapter::new);
     }
 

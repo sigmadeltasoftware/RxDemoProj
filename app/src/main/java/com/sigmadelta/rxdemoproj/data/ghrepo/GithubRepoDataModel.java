@@ -6,9 +6,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.jayway.jsonpath.JsonPath;
 import com.sigmadelta.rxdemoproj.MainApplication;
+import com.sigmadelta.rxdemoproj.R;
 import com.sigmadelta.rxdemoproj.domain.ghrepo.GithubRepo;
 import com.sigmadelta.rxdemoproj.domain.ghrepo.GithubRepoApi;
 import com.sigmadelta.rxdemoproj.domain.ghrepo.IGithubRepoDataModel;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +28,7 @@ public class GithubRepoDataModel implements IGithubRepoDataModel {
         return Observable.create(e -> {
             // Instantiate the RequestQueue.
             RequestQueue queue = Volley.newRequestQueue(MainApplication.getContext());
-            final String url ="https://api.github.com/search/repositories?q=user:" + userName + "&sort=stars&order=desc";
+            final String url ="https://api.github.com/search/repositories?q=user:" + userName + "+fork:true&sort=stars&order=desc";
             Timber.e("getGithubReposFromRequest()");
 
             // Request a string response from the provided URL.
@@ -53,8 +56,14 @@ public class GithubRepoDataModel implements IGithubRepoDataModel {
         final List<GithubRepo> repoList = new ArrayList<>(5);
 //        Timber.e("JsonRequest: " + jsonRequest);
 
+        // Limit maximal returns to 10
+        int totalRepos = JsonPath.read(jsonRequest, "$.total_count");
+        if (totalRepos > 10) {
+            totalRepos = 10;
+        }
+
         // TODO: Make more robust
-        for (int i = 0; i < 3; ++i) {
+        for (int i = 0; i < totalRepos; ++i) {
             GithubRepo repo = new GithubRepo();
             repo.setName(JsonPath.read(jsonRequest, getJsonPathFilter(i, GithubRepoApi.NAME.getApiName())));
             repo.setStars(JsonPath.read(jsonRequest, getJsonPathFilter(i, GithubRepoApi.STARS.getApiName())));
@@ -69,5 +78,13 @@ public class GithubRepoDataModel implements IGithubRepoDataModel {
 
     private String getJsonPathFilter(int position, String apiName) {
         return "$.items.[" + position + "]." + apiName;
+    }
+
+    private String getInvalidRepoJson() {
+        return  "{\"" + GithubRepoApi.NAME.getApiName() + "\":\"" + MainApplication.getContext().getResources().getString(R.string.invalid_username) +"\"," +
+                "\"" + GithubRepoApi.STARS.getApiName() + "\":-1," +
+                "\"" + GithubRepoApi.OWNER.getApiName() + "\":\"" + MainApplication.getContext().getResources().getString(R.string.invalid_username) +"\"," +
+                "\"" + GithubRepoApi.FORKED.getApiName() + "\":false," +
+                "\"" + GithubRepoApi.ISSUE_COUNT.getApiName() + "\":-1}";
     }
 }
