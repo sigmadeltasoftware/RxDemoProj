@@ -1,5 +1,6 @@
 package com.sigmadelta.rxdemoproj.data.ghrepo;
 
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
@@ -11,13 +12,13 @@ import com.sigmadelta.rxdemoproj.domain.ghrepo.GithubRepo;
 import com.sigmadelta.rxdemoproj.domain.ghrepo.GithubRepoApi;
 import com.sigmadelta.rxdemoproj.domain.ghrepo.IGithubRepoDataModel;
 
-import org.json.JSONException;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 
@@ -29,13 +30,16 @@ public class GithubRepoDataModel implements IGithubRepoDataModel {
             // Instantiate the RequestQueue.
             RequestQueue queue = Volley.newRequestQueue(MainApplication.getContext());
             final String url ="https://api.github.com/search/repositories?q=user:" + userName + "+fork:true&sort=stars&order=desc";
-            Timber.e("getGithubReposFromRequest()");
 
             // Request a string response from the provided URL.
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                     response -> {
-                        e.onNext(getGithubReposFromJson(response));
-                        e.onComplete();
+                        // Implement fromCallable to defer operations to background thread
+                        // considering response from Volley arrives on main thread
+
+                        Single.fromCallable(() -> getGithubReposFromJson(response))
+                                .subscribeOn(Schedulers.io())
+                                .subscribe(e::onNext, e::onError);
                     },
                     error -> {
                         e.onComplete();
@@ -53,6 +57,7 @@ public class GithubRepoDataModel implements IGithubRepoDataModel {
     }
 
     private List<GithubRepo> getGithubReposFromJson(String jsonRequest) {
+        // TODO: Make more robust
         final List<GithubRepo> repoList = new ArrayList<>(5);
 //        Timber.e("JsonRequest: " + jsonRequest);
 
@@ -62,7 +67,6 @@ public class GithubRepoDataModel implements IGithubRepoDataModel {
             totalRepos = 10;
         }
 
-        // TODO: Make more robust
         for (int i = 0; i < totalRepos; ++i) {
             GithubRepo repo = new GithubRepo();
             repo.setName(JsonPath.read(jsonRequest, getJsonPathFilter(i, GithubRepoApi.NAME.getApiName())));
@@ -72,7 +76,6 @@ public class GithubRepoDataModel implements IGithubRepoDataModel {
             repo.setIssues(JsonPath.read(jsonRequest, getJsonPathFilter(i, GithubRepoApi.ISSUE_COUNT.getApiName())));
             repoList.add(repo);
         }
-        Timber.e("Finished repo list: " + repoList);
         return repoList;
     }
 

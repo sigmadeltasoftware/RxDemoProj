@@ -23,8 +23,8 @@ public class GithubRepoViewModel {
 
     @NonNull
     public Observable<GithubRepoAdapter> bindGetRepoList() {
-        return _ghRepoSubject.flatMap(_ghRepoDataModel::getRepoList)
-                .subscribeOn(Schedulers.io())
+        return _ghRepoSubject.subscribeOn(Schedulers.io())
+                .flatMap(_ghRepoDataModel::getRepoList)
                 .map(GithubRepoAdapter::new);
     }
 

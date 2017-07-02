@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fabSearch = (FloatingActionButton) findViewById(R.id.fabSearchUser);
         _compositeDisposable.add(RxView.clicks(fabSearch)
                 .subscribe( view -> {
+                    _ghRepoViewProxy.showSpinningWheel(true);
                     _ghRepoViewModel.getRepoList(editUserName.getText().toString())
                             .subscribeOn(Schedulers.io())
                             .subscribe();
