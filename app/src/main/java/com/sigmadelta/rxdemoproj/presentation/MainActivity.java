@@ -39,6 +39,11 @@ public class MainActivity extends AppCompatActivity {
     private IGithubUserViewProxy _ghUserViewProxy;
     private IGithubRepoViewProxy _ghRepoViewProxy;
 
+    /**
+     * Lifecycle methods
+     *
+     */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +109,11 @@ public class MainActivity extends AppCompatActivity {
         _compositeDisposable.dispose();
     }
 
+    /**
+     * Subscriptions
+     *
+     */
+
     private Disposable subscribeToUsernameChanges() {
         return _ghUserViewModel.bindGetUserData()
                 .subscribeOn(Schedulers.io())
@@ -124,12 +134,16 @@ public class MainActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(ghRepo -> {
-                    Timber.e("subscribeToProjectSearch() || itemcount: " + ghRepo.getItemCount());
                     _ghRepoViewProxy.showRepositoryData(ghRepo);
                 }, error -> {
-                    Timber.e("Error occurred: " + error);
+                    _ghRepoViewProxy.onRepositoryFetchError(error);
                 });
     }
+
+    /**
+     * Permissions
+     *
+     */
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

@@ -8,6 +8,14 @@ public class GithubRepo {
     private boolean _fork;
     private int _issues;
 
+    public GithubRepo() {
+        _name = "";
+        _stars = 0;
+        _owner = "";
+        _fork = false;
+        _issues = 0;
+    }
+
     public String getName() {
         return _name;
     }
