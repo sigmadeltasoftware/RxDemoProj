@@ -42,6 +42,16 @@ public class GithubRepoDataModel implements IGithubRepoDataModel {
                                 .subscribe(e::onNext, e::onError);
                     },
                     error -> {
+                        if (error != null) {
+                            switch (error.networkResponse.statusCode) {
+                                case 422:
+                                    e.onError(new Throwable("Github API Error Code: " + error.networkResponse.statusCode + " - Unprocessable entity"));
+                                    break;
+                                default:
+                                    e.onError(new Throwable("Github API Error Code: " + error.networkResponse.statusCode));
+                                    break;
+                            }
+                        }
                         e.onComplete();
                     }
             );
@@ -63,8 +73,17 @@ public class GithubRepoDataModel implements IGithubRepoDataModel {
 
         // Limit maximal returns to 10
         int totalRepos = JsonPath.read(jsonRequest, "$.total_count");
+
         if (totalRepos > 10) {
             totalRepos = 10;
+        } else if (totalRepos == 0) {
+            Timber.d("User has no repositories");
+            repoList.add(new GithubRepo());
+            return repoList;
+        } else if (totalRepos < 0) {
+            Timber.e("Repo count from StringRequest returned negative number!");
+            repoList.add(getInvalidRepo());
+            return repoList;
         }
 
         for (int i = 0; i < totalRepos; ++i) {
@@ -83,11 +102,13 @@ public class GithubRepoDataModel implements IGithubRepoDataModel {
         return "$.items.[" + position + "]." + apiName;
     }
 
-    private String getInvalidRepoJson() {
-        return  "{\"" + GithubRepoApi.NAME.getApiName() + "\":\"" + MainApplication.getContext().getResources().getString(R.string.invalid_username) +"\"," +
-                "\"" + GithubRepoApi.STARS.getApiName() + "\":-1," +
-                "\"" + GithubRepoApi.OWNER.getApiName() + "\":\"" + MainApplication.getContext().getResources().getString(R.string.invalid_username) +"\"," +
-                "\"" + GithubRepoApi.FORKED.getApiName() + "\":false," +
-                "\"" + GithubRepoApi.ISSUE_COUNT.getApiName() + "\":-1}";
+    private GithubRepo getInvalidRepo() {
+        GithubRepo repo = new GithubRepo();
+        repo.setName(MainApplication.getContext().getResources().getString(R.string.invalid_username));
+        repo.setStars(-1);
+        repo.setOwner(MainApplication.getContext().getResources().getString(R.string.invalid_username));
+        repo.setFork(false);
+        repo.setIssues(-1);
+        return repo;
     }
 }

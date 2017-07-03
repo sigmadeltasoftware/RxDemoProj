@@ -2,6 +2,7 @@ package com.sigmadelta.rxdemoproj.presentation.ghrepo;
 
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -62,7 +63,8 @@ public class GithubRepoViewProxy implements IGithubRepoViewProxy {
 
     @Override
     public void onRepositoryFetchError(Throwable throwable) {
-        // TODO:
+        Timber.e("Error occurred: " + throwable.getMessage());
+        Toast.makeText(_act, "Error occurred: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
         showSpinningWheel(false);
     }
 }
